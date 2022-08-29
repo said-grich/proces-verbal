@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/document")
 public class DocumentController {
     @Autowired
     DocumentService service;
     @PostMapping("/create-new-doc/")
-    public void createDocument(@RequestBody DocumentDto documentDto) {
+    public void createDocument(@RequestBody DocumentDto documentDto) throws IOException {
         service.createDocument(documentDto);
     }
 }
