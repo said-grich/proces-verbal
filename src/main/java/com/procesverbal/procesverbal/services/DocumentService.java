@@ -48,7 +48,7 @@ public class DocumentService {
             document = creatHeaderOfDocument(document, documentDto.getObjet(), documentDto.getAooNumber(), documentDto.getSeanceTitle());
 
 
-            document = setCommissionPart(document,documentDto.getCommissionMemberDtoList(),documentDto.getDateOfCommission());
+            document = setCommissionPart(document,documentDto.getCommissionMemberDtoList(),documentDto.getDateOfCommission(),documentDto.getAooNumber(),documentDto.getObjet());
             exportDocument(document, documentDto.getTitle());
 
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class DocumentService {
 
     }
 
-    public XWPFDocument setCommissionPart(XWPFDocument doc,List<CommissionMemberDto> memberDtos ,String dateOfCommission) {
+    public XWPFDocument setCommissionPart(XWPFDocument doc,List<CommissionMemberDto> memberDtos ,String dateOfCommission,String aooNumber,String objet) {
         try {
             XWPFParagraph commissionParagraph1 = doc.createParagraph();
             XWPFRun commissionRun1 = commissionParagraph1.createRun();
@@ -72,11 +72,38 @@ public class DocumentService {
             commissionRun2.setFontFamily(GARAMOND_FONT);
             commissionRun2.setText(readTextFile(COMMISSION_TEXT));
             commissionRun2.addBreak();
+            //commission table
             List<CommissionMemberDto>  list =new ArrayList<>();
             list.addAll(COMMISSION_FIX_MEMBER);
             list.addAll(memberDtos);
-            list.add(new CommissionMemberDto("","","",""));
             doc = createTowCaseTable(doc,COMMISSION_TAB_HEADER,list);
+            //ayent pour pbjet :
+            XWPFParagraph commissionObjetParagraphe = doc.createParagraph();
+            commissionObjetParagraphe.setIndentationFirstLine(720);
+            commissionObjetParagraphe.setSpacingAfterLines(1);
+            commissionObjetParagraphe.setAlignment(ParagraphAlignment.BOTH);
+            XWPFRun objetRun = commissionObjetParagraphe.createRun();
+            objetRun.setFontSize(11);
+            objetRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+            objetRun.setText(capitalize(readTextFile(COMMISSION_TEXT_1)));
+            //Aoo number
+            XWPFRun objetNumberRun = commissionObjetParagraphe.createRun();
+            objetNumberRun.setFontSize(11);
+            objetNumberRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+            objetNumberRun.setBold(true);
+            objetNumberRun.setText(aooNumber.toUpperCase());
+            //static text
+            XWPFRun staticRun = commissionObjetParagraphe.createRun();
+            staticRun.setFontSize(11);
+            staticRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+            staticRun.setText(" ayant pour objet :");
+            //set objet text
+            XWPFRun objetTextRun = commissionObjetParagraphe.createRun();
+            objetTextRun.setFontSize(11);
+            objetTextRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+            objetTextRun.setBold(true);
+            objetTextRun.setText(objet.toUpperCase());
+
             return doc;
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage() + "error with file " + COMMISSION_TEXT);
@@ -128,6 +155,7 @@ public class DocumentService {
                 }
             }
         }
+        doc=addNewLine(doc);
         // First row
         return doc;
     }

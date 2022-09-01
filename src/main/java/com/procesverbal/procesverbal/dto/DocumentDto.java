@@ -17,5 +17,9 @@ public class DocumentDto {
     private String  dateOfCommission;
     private String  decisionNumber;
     private String  decisionDate;
+    private String  journalFrancais;
+    private String  journalArab;
+    private  String  dateAndHourOfPortail;
+
     private List<CommissionMemberDto> commissionMemberDtoList;
 }

@@ -14,6 +14,7 @@ public abstract class AppString {
     public static String TIMES_NEW_RAMAN_FONT = "Times New Roman";
     public static String UNIVERS_57_CONDEDSED = "Univers 57 Condensed";
     public static String COMMISSION_TEXT = "src/main/resources/static/text/commission.txt";
+    public static String COMMISSION_TEXT_1 = "src/main/resources/static/text/commission1.txt";
     public static String BLACK_COLOR = "000000";
     public static int BORDER_SIZE = 12;
     public static List<String> COMMISSION_TAB_HEADER = new ArrayList<String>() {{
