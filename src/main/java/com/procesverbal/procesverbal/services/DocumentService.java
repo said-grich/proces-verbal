@@ -55,15 +55,17 @@ public class DocumentService {
             CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
             CTPageMar pageMar = sectPr.addNewPgMar();
             pageMar.setLeft(BigInteger.valueOf(PAGE_MARGINS));
-            pageMar.setTop(BigInteger.valueOf(PAGE_MARGINS));
+            pageMar.setTop(BigInteger.valueOf(PAGE_MARGINS_BOTTOM));
             pageMar.setRight(BigInteger.valueOf(PAGE_MARGINS));
             pageMar.setBottom(BigInteger.valueOf(PAGE_MARGINS_BOTTOM));
+            pageMar.setFooter(BigInteger.valueOf(50));
+            pageMar.setHeader(BigInteger.valueOf(10));
             List<SeanceDto> seanceDtoList = documentDto.getSeanceDtoList();
             document = setFotterInfo(document,"AOO N° " + documentDto.getAooNumber());
 
 
             for (SeanceDto seanceDto:seanceDtoList){
-                 document=   seanceService.creatSeance(document,documentDto.getAooNumber(),seanceDto);
+                 document=   seanceService.creatSeance(document,documentDto.getAooNumber(),documentDto.getMontant(),seanceDto);
             }
             exportDocument(document,documentDto.getTitle());
 

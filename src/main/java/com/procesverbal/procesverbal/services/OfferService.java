@@ -113,7 +113,37 @@ public class OfferService {
         doc=setMontantPart(doc,montant);
         doc=setStaticTextOfferMotifs(doc);
         doc=setMotifTab(doc,offerDtoList);
+        doc=setListDesOffersWithoutReserve(doc,offerDtoList);
+        doc=setListDesOffersWithReserve(doc,offerDtoList);
+
         return doc;
+    }
+    XWPFDocument setListDesOffersWithoutReserve(XWPFDocument doc,List<OfferDto> offerDtoList ) throws FileNotFoundException {
+        offerDtoList=offerDtoList.stream().filter(offerDto -> (offerDto.getIsRejectedBeforeMaj()==false && offerDto.getIsWithReserve()!=1) ).collect(Collectors.toList());
+        XWPFParagraph paragraph1 = doc.createParagraph();
+        XWPFRun run1 = paragraph1.createRun();
+        run1.setFontFamily(TW_CEN_MT_FONT);
+        run1.setText(capitalize(readTextFile(OFFER_TEXT_WITHOUT_RS_TXT)));
+        XWPFRun run2 = paragraph1.createRun();
+        run2.setUnderline(UnderlinePatterns.SINGLE);
+        run2.setText(capitalize(OFFER_TEXT_WITHOUT_RS_STRING));
+        doc=  generateList(doc,offerDtoList);
+        return doc;
+    }
+
+    XWPFDocument setListDesOffersWithReserve(XWPFDocument doc,List<OfferDto> offerDtoList) {
+        offerDtoList=offerDtoList.stream().filter(offerDto -> (offerDto.getIsRejectedBeforeMaj()==false && offerDto.getIsWithReserve()==1) ).collect(Collectors.toList());
+        XWPFParagraph paragraph1 = doc.createParagraph();
+        XWPFRun run1 = paragraph1.createRun();
+        run1.setFontFamily(TW_CEN_MT_FONT);
+        run1.setText(capitalize(OFFER_TEXT_WITH_RS_STRING));
+        if(!offerDtoList.isEmpty()){
+            doc =createTowCaseReserveTable(doc,OFFER_RESERVE_TAB_HEADER,offerDtoList);
+
+        }else {
+            doc =createTowCaseNeantTable(doc,OFFER_RESERVE_TAB_HEADER);
+        }
+        return  doc;
     }
     XWPFDocument setMontantPart(XWPFDocument doc,String montant) throws FileNotFoundException {
         XWPFParagraph paragraph1 = doc.createParagraph();
@@ -196,7 +226,6 @@ public class OfferService {
                 }
             }
         }
-        doc = addNewLine(doc);
         // First row
         return doc;
     }
@@ -233,6 +262,93 @@ public class OfferService {
         return tab;
     }
 
+
+    //reserve TAB:
+
+    XWPFDocument createTowCaseReserveTable(XWPFDocument doc, List<String> header, List<OfferDto> offerDtoList) {
+        int rows = offerDtoList.size() + 1;
+        int cols = header.size();
+        XWPFTable table = initTab(doc, rows, cols);
+        table = setTabHeader(table, header);
+        for (int i = 1; i < rows; i++) {
+            XWPFTableRow row = table.getRow(i);
+            row.setHeight(CELL_HEIGHT_CONTENT);
+            for (int j = 0; j < cols; j++) {
+                if (j == 0) {
+                    XWPFTableCell cell = row.getCell(j);
+                    cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                    XWPFParagraph tmpParagraph = cell.getParagraphs().get(0);
+                    tmpParagraph.setAlignment(ParagraphAlignment.LEFT);
+                    //set Name
+                    XWPFRun nameRun = tmpParagraph.createRun();
+                    nameRun.setBold(true);
+                    nameRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+                    nameRun.setFontSize(12);
+                    nameRun.setText(offerDtoList.get(i - 1).getName().toUpperCase());
+                    //set Address
+                    XWPFRun addressRun = tmpParagraph.createRun();
+                    addressRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+                    addressRun.setFontSize(12);
+                    addressRun.setText(", " + offerDtoList.get(i - 1).getAddress());
+                    cell.setWidth("50%");
+                } else if (j == 1) {
+                    XWPFTableCell cell = row.getCell(j);
+                    cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                    XWPFParagraph tmpParagraph = cell.getParagraphs().get(0);
+                    tmpParagraph.setAlignment(ParagraphAlignment.CENTER);
+                    XWPFRun nameRun = tmpParagraph.createRun();
+                    nameRun.setBold(true);
+                    nameRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+                    nameRun.setFontSize(12);
+                    nameRun.setText(offerDtoList.get(i - 1).getReserve());
+                    cell.setWidth("50%");
+                }
+            }
+        }
+        // First row
+        return doc;
+    }
+
+    XWPFDocument createTowCaseNeantTable(XWPFDocument doc, List<String> header) {
+        int rows = 2;
+        int cols = header.size();
+        XWPFTable table = initTab(doc, rows, cols);
+        table.setWidth("100%");
+        table = setTabHeader(table, header);
+        for (int i = 1; i < rows; i++) {
+            XWPFTableRow row = table.getRow(i);
+            row.setHeight(CELL_HEIGHT_CONTENT);
+            for (int j = 0; j < cols; j++) {
+                if (j == 0) {
+
+                    XWPFTableCell cell = row.getCell(j);
+                    cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                    XWPFParagraph tmpParagraph = cell.getParagraphs().get(0);
+                    tmpParagraph.setAlignment(ParagraphAlignment.CENTER);
+                    //set Name
+                    XWPFRun nameRun = tmpParagraph.createRun();
+                    nameRun.setBold(true);
+                    nameRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+                    nameRun.setFontSize(12);
+                    nameRun.setText(NEANT);
+                    cell.setWidth("50%");
+                } else if (j == 1) {
+                    XWPFTableCell cell = row.getCell(j);
+                    cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                    XWPFParagraph tmpParagraph = cell.getParagraphs().get(0);
+                    tmpParagraph.setAlignment(ParagraphAlignment.CENTER);
+                    XWPFRun nameRun = tmpParagraph.createRun();
+                    nameRun.setBold(true);
+                    nameRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
+                    nameRun.setFontSize(12);
+                    nameRun.setText(NEANT);
+                    cell.setWidth("50%");
+                }
+            }
+        }
+        // First row
+        return doc;
+    }
 
 
 }

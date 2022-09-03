@@ -38,7 +38,6 @@ public class CommissionService {
 
             commissionRun4.setFontFamily(GARAMOND_FONT);
             commissionRun4.setText(COMMISSION_TEXT_2);
-            commissionRun4.addBreak();
             //commission table
             List<CommissionMemberDto> list = new ArrayList<>();
             list.addAll(COMMISSION_FIX_MEMBER);
@@ -70,7 +69,6 @@ public class CommissionService {
             objetTextRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
             objetTextRun.setBold(true);
             objetTextRun.setText(objet.toUpperCase() + ".");
-            objetTextRun.addBreak();
 
             return doc;
         } catch (FileNotFoundException e) {
@@ -88,7 +86,7 @@ public class CommissionService {
         table = setTabHeader(table, header);
         for (int i = 1; i < rows; i++) {
             XWPFTableRow row = table.getRow(i);
-            row.setHeight(1300);
+            row.setHeight(CELL_HEIGHT_CONTENT);
             for (int j = 0; j < cols; j++) {
                 if (j == 0) {
                     XWPFTableCell cell = row.getCell(j);
@@ -124,14 +122,13 @@ public class CommissionService {
                 }
             }
         }
-        doc = addNewLine(doc);
         // First row
         return doc;
     }
 
     XWPFTable setTabHeader(XWPFTable table, List<String> headerList) {
         XWPFTableRow row = table.getRow(0);
-        row.setHeight(800);
+        row.setHeight(CELL_HEIGHT_HEADER);
         for (int j = 0; j < headerList.size(); j++) {
             XWPFTableCell cell = row.getCell(j);
             cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);

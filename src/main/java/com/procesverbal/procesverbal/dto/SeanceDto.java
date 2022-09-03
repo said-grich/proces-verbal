@@ -21,7 +21,6 @@ public class SeanceDto {
     private String  decisionDate;
     private  String dateOfPortail;
     private  String hourOfPortail;
-    private  String montant;
     private List<CommissionMemberDto> commissionMemberDtoList;
     private List<JournalDto> journalDtoList;
     private List<OfferDto> offerDtoList;

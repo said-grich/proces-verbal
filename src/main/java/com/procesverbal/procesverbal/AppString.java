@@ -27,11 +27,23 @@ public abstract class AppString {
     public static String OFFER_TEXT_NON_DEPOSE = "src/main/resources/static/text/non-deposer.txt";
     public static String OFFER_TEXT_INCOMPLETE = "src/main/resources/static/text/incomplet.text";
     public static String OFFER_TEXT_PLIS_DESPOSER = "src/main/resources/static/text/plis-desposer.txt";
+    public static String OFFER_TEXT_WITHOUT_RS_TXT = "src/main/resources/static/text/list-final-befor.txt";
+    public static String OFFER_TEXT_WITHOUT_RS_STRING = "Liste des concurrents admissibles sans réserve :";
+    public static String OFFER_TEXT_WITH_RS_STRING = "Liste des concurrents admissibles avec réserve :";
     public static String OFFER_TEXT_MONTANT = "src/main/resources/static/text/montant.txt";
     public static String OFFER_TEXT_MOTIF_PART1 = "src/main/resources/static/text/motif-part1.txt";
     public static String OFFER_TEXT_MOTIF_PART2 = "src/main/resources/static/text/motif-part2.txt";
     public static String OFFER_TEXT_MOTIF_PART3 = "src/main/resources/static/text/motif-part3.txt";
     public static String OFFER_TEXT_MOTIF_PART4 = "src/main/resources/static/text/motif-part4.txt";
+    public static String OFFER_TEXT_SEANCE_PUBLIC = "La séance publique est alors reprise et le Président :";
+    public static String OFFER_TEXT_MAJORATION_1 = "- Donne lecture de la liste des concurrents admissibles cités ci-dessus en précisant aux concurrents admissibles avec réserve l’objet de celle-ci ;";
+    public static String OFFER_TEXT_MAJORATION_2 = "- Rend, contre décharge, aux concurrents écartés présents leurs dossiers à l’exception des éléments d’information ayant été à l’origine de leur élimination, il s’agit de : ";
+    public static String OFFER_TEXT_FINANCIER = "src/main/resources/static/text/offer-financier.txt";
+    public static String OFFER_TEXT_MOTIF_AFTER_1 = "src/main/resources/static/text/after-maj1.txt";
+    public static String OFFER_TEXT_MOTIF_AFTER_2 = "src/main/resources/static/text/after-maj1.txt";
+    public static String OFFER_RECTIFIES_TEXT = "src/main/resources/static/text/rectifies.txt";
+    public static String OFFER_CLASSEMENT_TEXT = "src/main/resources/static/text/classement.txt";
+    public static String OFFER_CLASSEMENT_STRING = "Ce classement donne les résultats suivants :";
     public static String DOTE_SYMBOL = "⚫";
     public static String DH_TTC_SYMBOL = "DHS TTC";
     public static String DASH_SYMBOL = "-";
@@ -47,6 +59,20 @@ public abstract class AppString {
         add("Concurrents");
         add("Motif de l’écartement");
     }};
+    public static List<String> OFFER_RESERVE_TAB_HEADER = new ArrayList<String>() {{
+        add("Concurrents");
+        add("Objet de la réserve");
+    }};
+    public static List<String> OFFER_FINANCIER_TAB_HEADER = new ArrayList<String>() {{
+        add("Concurrents");
+        add("Montant des actes d’engagement en dirhams TTC");
+        add("Rabais /Majoration");
+    }};
+    public static List<String> OFFER_RECTIFIES_TAB_HEADER = new ArrayList<String>() {{
+        add("Concurrents");
+        add("Montant des actes \n d’engagement en \n dirhams TTC");
+        add("Montant des actes  d’engagement rectifiés en dirhams TTC");
+    }};
     public static List<CommissionMemberDto> COMMISSION_FIX_MEMBER = new ArrayList<CommissionMemberDto>() {{
         add(new CommissionMemberDto("M.EL BERKAOUI AHMED", "Chef de service des affaires administratives et financière, des constructions, des équipements et des patrimoines", "PRESIDENT", ""));
         add(new CommissionMemberDto("M. ABBASSE ANNAYA", "Bureau des marchés", "MEMBRE", ""));
@@ -55,8 +81,8 @@ public abstract class AppString {
         add(new CommissionMemberDto("M.ABDELKARIM EL MALKI", "Bureau d’économie", "MEMBRE", ""));
 
     }};
-    public static int CELL_HEIGHT_CONTENT = 1300;
-    public static int CELL_HEIGHT_HEADER = 800;
+    public static int CELL_HEIGHT_CONTENT = 800;
+    public static int CELL_HEIGHT_HEADER = 600;
     public static int PARAGRAPH_OFFSET = 300;
 
 

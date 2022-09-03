@@ -15,4 +15,9 @@ public class OfferDto {
     private Boolean isRejectedAfterMaj;
     private String motifAfterMaj;
     private String motifBeforeMaj;
+    private int isWithReserve;
+    private String reserve;
+    private Float montant;
+    private Float montantAfterMaj;
+    private Float majoration;
 }

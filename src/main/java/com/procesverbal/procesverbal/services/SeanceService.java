@@ -3,9 +3,7 @@ package com.procesverbal.procesverbal.services;
 import com.procesverbal.procesverbal.AppString;
 import com.procesverbal.procesverbal.dto.SeanceDto;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.sl.usermodel.VerticalAlignment;
 import org.apache.poi.util.Units;
-import org.apache.poi.wp.usermodel.HeaderFooterType;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +30,11 @@ public class SeanceService {
     JournalService journalService;
     @Autowired
     OfferService offerService;
+    @Autowired
+    OfferFinancierService offerFinancierService;
     Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
-    public XWPFDocument creatSeance(XWPFDocument document, String aooNumber, SeanceDto seanceDto) throws IOException {
+    public XWPFDocument creatSeance(XWPFDocument document, String aooNumber,Long montant ,SeanceDto seanceDto) throws IOException {
         try {
 
 
@@ -52,14 +52,16 @@ public class SeanceService {
             }
             //setOffers:
             if (seanceDto.getIsHasOfferFirst() == 1) {
-                document = offerService.setOffersPart1(document, seanceDto.getOfferDtoList(), seanceDto.getMontant());
+                document = offerService.setOffersPart1(document, seanceDto.getOfferDtoList(), montant.toString());
             }
             if(seanceDto.getIsHasOfferSecond()==1){
-               document = offerService.setOffersPart2(document,seanceDto.getOfferDtoList(),seanceDto.getMontant());
+               document = offerService.setOffersPart2(document,seanceDto.getOfferDtoList(),montant.toString());
+               document= offerFinancierService.setOffersFinancierPart(document,seanceDto.getOfferDtoList(),montant);
             }
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();
             run.addBreak(BreakType.PAGE);
+
             return document;
 
         } catch (Exception e) {
@@ -86,7 +88,6 @@ public class SeanceService {
             seanceNumberRun.setFontFamily(UNIVERS_57_CONDEDSED_FONT);
             seanceNumberRun.setText("AOO N° " + seanceNumber.toUpperCase());
             seanceNumberRun.setUnderline(UnderlinePatterns.SINGLE);
-            seanceNumberRun.addBreak();
             //set object paragraph
             XWPFParagraph ObjetParagraph = doc.createParagraph();
             ObjetParagraph.setIndentationFirstLine(720);
@@ -100,7 +101,6 @@ public class SeanceService {
             objetRun2.setBold(true);
             objetRun2.setFontFamily(TIMES_NEW_RAMAN_FONT);
             objetRun2.setText(objet.toUpperCase());
-            objetRun2.addBreak();
             doc = setSeanceTitle(doc, seanceTitle);
             return doc;
         } catch (IOException e) {
@@ -143,7 +143,6 @@ public class SeanceService {
         r.setTextHighlightColor("Yellow");
         r.setBold(true);
         r.setText(capitalize(toFrenchNumber(seanceTitle)) + " séance");
-        r.addBreak();
         return doc;
     }
 
