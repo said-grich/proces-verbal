@@ -18,6 +18,8 @@ public class DocumentController {
     DocumentService service;
     @PostMapping("/create-new-doc/")
     public void createDocument(@RequestBody DocumentDto documentDto) throws IOException {
-        service.createDocument(documentDto);
+      service.createDocument(documentDto);
     }
+
+
 }

@@ -4,14 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DocumentDto {
-    private String title;
-    private String aooNumber;
+public class JournalDto {
 
-    private  List<SeanceDto> seanceDtoList;
+
+    private String  journalName;
+    private String  journalNumber;
+    private String  journalDate;
+    private String  journalPage;
+
+
 }
