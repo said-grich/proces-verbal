@@ -1,7 +1,10 @@
 package com.procesverbal.procesverbal.services;
 
+import com.procesverbal.procesverbal.dto.CommissionMemberDto;
 import com.procesverbal.procesverbal.dto.OfferDto;
+import com.procesverbal.procesverbal.dto.SeanceDto;
 import org.apache.poi.xwpf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
@@ -14,7 +17,10 @@ import static com.procesverbal.procesverbal.helper.Functions.*;
 
 @Service
 public class OfferFinancierService {
-    public XWPFDocument setOffersFinancierPart(XWPFDocument doc, List<OfferDto> offerDtoList, Long montant) throws FileNotFoundException {
+
+    @Autowired
+    CommissionService commissionService;
+    public XWPFDocument setOffersFinancierPart(XWPFDocument doc, Long montant, SeanceDto seanceDto) throws FileNotFoundException {
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
@@ -35,10 +41,12 @@ public class OfferFinancierService {
         XWPFRun run5 = paragraph4.createRun();
         run5.setFontFamily(TW_CEN_MT_FONT);
         run5.setText(readTextFile(OFFER_TEXT_FINANCIER));
-        offerDtoList = offerDtoList.stream().filter(offerDto -> offerDto.getIsRejectedBeforeMaj() == false).collect(Collectors.toList());
+       List<OfferDto> offerDtoList = seanceDto.getOfferDtoList().stream().filter(offerDto -> offerDto.getIsRejectedBeforeMaj() == false).collect(Collectors.toList());
         doc = createThreeCaseTable(doc, OFFER_FINANCIER_TAB_HEADER, offerDtoList);
         doc = setMotifTab(doc, offerDtoList);
-        doc = setRectifierPart(doc, offerDtoList, montant);
+        doc = setRectifierPart(doc, offerDtoList, montant,seanceDto);
+        doc=   setCommissionEmg( doc,  seanceDto.getCommissionMemberDtoListFinal(),seanceDto.getDateFaitLe());
+
         return doc;
     }
 
@@ -231,7 +239,7 @@ public class OfferFinancierService {
         return doc;
     }
 
-    XWPFDocument setRectifierPart(XWPFDocument doc, List<OfferDto> offerDtoList, Long montant) throws FileNotFoundException {
+    XWPFDocument setRectifierPart(XWPFDocument doc, List<OfferDto> offerDtoList, Long montant,SeanceDto seanceDto) throws FileNotFoundException {
         offerDtoList.stream().filter(offerDto -> !offerDto.getIsRejectedBeforeMaj() && !offerDto.getIsRejectedBeforeMaj()).collect(Collectors.toList());
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
@@ -242,7 +250,7 @@ public class OfferFinancierService {
         List<OfferDto> sortedList = offerDtoList.stream()
                 .sorted(Comparator.comparingDouble(OfferDto::getMontantAfterMaj))
                 .collect(Collectors.toList());
-        doc = setClassementPart(doc,sortedList);
+        doc = setClassementPart(doc,sortedList,seanceDto);
 
         return doc;
     }
@@ -302,7 +310,7 @@ public class OfferFinancierService {
         return doc;
     }
 
-    XWPFDocument setClassementPart(XWPFDocument doc, List<OfferDto> offerDtoList) throws FileNotFoundException {
+    XWPFDocument setClassementPart(XWPFDocument doc, List<OfferDto> offerDtoList,SeanceDto seanceDto) throws FileNotFoundException {
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
@@ -314,7 +322,8 @@ public class OfferFinancierService {
         run2.setText((capitalize(OFFER_CLASSEMENT_STRING)));
 
         doc = generateList(doc, offerDtoList);
-
+        seanceDto.setOfferWinner(offerDtoList.get(0));
+        doc =setWinner( doc , seanceDto.getOfferWinner(),seanceDto);
 
         return doc;
     }
@@ -337,6 +346,78 @@ public class OfferFinancierService {
         }
         return doc;
     }
+
+    XWPFDocument setWinner(XWPFDocument doc ,OfferDto offerWinner,SeanceDto seanceDto) throws FileNotFoundException {
+        XWPFParagraph paragraph1 = doc.createParagraph();
+        XWPFRun run1 = paragraph1.createRun();
+        run1.setFontFamily(TW_CEN_MT_FONT);
+        run1.setText((capitalize(OFFER_INVITE_STRING)));
+        XWPFRun run2 = paragraph1.createRun();
+        run2.setFontFamily(TW_CEN_MT_FONT);
+        run2.setBold(true);
+        run2.setText(offerWinner.getName().toUpperCase());
+        XWPFRun run3 = paragraph1.createRun();
+        run3.setFontFamily(TW_CEN_MT_FONT);
+        run3.setText((capitalize(offerWinner.getAddress())) +"; à :");
+        XWPFParagraph paragraph2 = doc.createParagraph();
+        paragraph2.setIndentationFirstLine(800);
+        XWPFRun run4 = paragraph2.createRun();
+        run4.setFontFamily(TW_CEN_MT_FONT);
+        run4.setText((capitalize(OFFER_INVITE_STRING_2)));
+
+        //set Delai :
+        String delaiString= OFFER_DELAI_STRING_1 +" "+ seanceDto.getDateDelai() +" à "+seanceDto.getHourDelai()+", "+OFFER_DELAI_STRING_2;
+        XWPFParagraph paragraph3 = doc.createParagraph();
+        XWPFRun run5 = paragraph3.createRun();
+        run5.setFontFamily(TW_CEN_MT_FONT);
+        run5.setBold(true);
+        run5.setFontSize(12);
+        run5.setText((capitalize(delaiString)));
+        //set Suspend :
+        XWPFParagraph paragraph4 = doc.createParagraph();
+        XWPFRun run6 = paragraph4.createRun();
+        run6.setFontFamily(TW_CEN_MT_FONT);
+        run6.setText((capitalize(OFFER_SUSPEND_STRING)));
+
+        XWPFRun run7 = paragraph4.createRun();
+        run7.setBold(true);
+        run7.setUnderline(UnderlinePatterns.SINGLE);
+        run7.setFontFamily(TW_CEN_MT_FONT);
+        run7.setText(" "+seanceDto.getDateSuspend() +" à "+ seanceDto.getHourSuspend()+" ");
+
+        XWPFRun run8 = paragraph4.createRun();
+        run8.setFontFamily(TW_CEN_MT_FONT);
+        run8.setText(readTextFile(OFFER_SUSPEND_TEXT));
+
+        //set fait le :
+
+
+
+
+        return doc;
+    }
+    XWPFDocument setCommissionEmg(XWPFDocument doc, List<CommissionMemberDto> memberDtos ,String dateFaitLe){
+
+        XWPFParagraph paragraph6 = doc.createParagraph();
+        XWPFRun run9 = paragraph6.createRun();
+        paragraph6.setAlignment(ParagraphAlignment.RIGHT);
+        run9.setFontFamily(TW_CEN_MT_FONT);
+        run9.setUnderline(UnderlinePatterns.SINGLE);
+        String dateFaitLeString= OFFER_FAIT_LE_STRING+" " + dateFaitLe ;
+        run9.setText(capitalize(dateFaitLeString));
+
+        XWPFParagraph paragraph1 = doc.createParagraph();
+        XWPFRun run1 = paragraph1.createRun();
+        run1.setFontFamily(TW_CEN_MT_FONT);
+        run1.setBold(true);
+        run1.setUnderline(UnderlinePatterns.SINGLE);
+        run1.setText((capitalize(OFFER_COMMISSION_LE_STRING)));
+
+        commissionService.createTowCaseTable(doc,COMMISSION_TAB_HEADER,memberDtos);
+        return doc;
+    }
+
+
 
 
 }

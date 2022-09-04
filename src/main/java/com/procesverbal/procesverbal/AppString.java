@@ -44,6 +44,15 @@ public abstract class AppString {
     public static String OFFER_RECTIFIES_TEXT = "src/main/resources/static/text/rectifies.txt";
     public static String OFFER_CLASSEMENT_TEXT = "src/main/resources/static/text/classement.txt";
     public static String OFFER_CLASSEMENT_STRING = "Ce classement donne les résultats suivants :";
+    public static String OFFER_INVITE_STRING = "La commission invite par faxe confirmé, le concurrent ayant présenté l’offre la plus avantageuse qui est ";
+    public static String OFFER_INVITE_STRING_2 = "1.\tProduire les pièces du dossier administratif prévues par le règlement de la consultation.";
+    public static String OFFER_DELAI_STRING_1 = "Et ce avant le";
+    public static String OFFER_DELAI_STRING_2 = "délai de rigueur.";
+    public static String OFFER_SUSPEND_TEXT = "src/main/resources/static/text/suspend.txt";
+    public static String OFFER_SUSPEND_STRING = "Le président suspend la séance et fixe la date du ";
+    public static String OFFER_FAIT_LE_STRING = "Fait à Zagora, le :";
+    public static String OFFER_COMMISSION_LE_STRING = "Emargement des membres de la commission :";
+
     public static String DOTE_SYMBOL = "⚫";
     public static String DH_TTC_SYMBOL = "DHS TTC";
     public static String DASH_SYMBOL = "-";

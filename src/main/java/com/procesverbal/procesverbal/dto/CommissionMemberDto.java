@@ -12,4 +12,8 @@ public class CommissionMemberDto {
     private  String desc ;
     private  String role ;
     private  String emargement ;
+
+
+
+
 }

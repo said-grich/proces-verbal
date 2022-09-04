@@ -12,6 +12,7 @@ import java.util.List;
 public class DocumentDto {
     private String title;
     private String aooNumber;
+
     private  Long montant;
     private  List<SeanceDto> seanceDtoList;
 }

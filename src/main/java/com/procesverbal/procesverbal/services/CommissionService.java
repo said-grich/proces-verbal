@@ -39,10 +39,8 @@ public class CommissionService {
             commissionRun4.setFontFamily(GARAMOND_FONT);
             commissionRun4.setText(COMMISSION_TEXT_2);
             //commission table
-            List<CommissionMemberDto> list = new ArrayList<>();
-            list.addAll(COMMISSION_FIX_MEMBER);
-            list.addAll(memberDtos);
-            doc = createTowCaseTable(doc, COMMISSION_TAB_HEADER, list);
+
+            doc = createTowCaseTable(doc, COMMISSION_TAB_HEADER, memberDtos);
             //ayent pour pbjet :
             XWPFParagraph commissionObjetParagraphe = doc.createParagraph();
             commissionObjetParagraphe.setIndentationFirstLine(720);

@@ -1,6 +1,7 @@
 package com.procesverbal.procesverbal.services;
 
 import com.procesverbal.procesverbal.AppString;
+import com.procesverbal.procesverbal.dto.OfferDto;
 import com.procesverbal.procesverbal.dto.SeanceDto;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
@@ -56,7 +57,8 @@ public class SeanceService {
             }
             if(seanceDto.getIsHasOfferSecond()==1){
                document = offerService.setOffersPart2(document,seanceDto.getOfferDtoList(),montant.toString());
-               document= offerFinancierService.setOffersFinancierPart(document,seanceDto.getOfferDtoList(),montant);
+               document= offerFinancierService.setOffersFinancierPart(document,montant, seanceDto);
+
             }
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();
