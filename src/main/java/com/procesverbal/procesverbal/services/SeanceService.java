@@ -33,6 +33,8 @@ public class SeanceService {
     OfferService offerService;
     @Autowired
     OfferFinancierService offerFinancierService;
+    @Autowired
+    ReceptionService receptionService;
     Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
     public XWPFDocument creatSeance(XWPFDocument document, String aooNumber,Long montant ,SeanceDto seanceDto) throws IOException {
@@ -59,6 +61,9 @@ public class SeanceService {
                document = offerService.setOffersPart2(document,seanceDto.getOfferDtoList(),montant.toString());
                document= offerFinancierService.setOffersFinancierPart(document,montant, seanceDto);
 
+            }
+            if (seanceDto.getIsHasReception()==1){
+                document= receptionService.setReceptionPart(document,seanceDto);
             }
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();

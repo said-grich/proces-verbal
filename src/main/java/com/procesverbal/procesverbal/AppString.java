@@ -52,6 +52,10 @@ public abstract class AppString {
     public static String OFFER_SUSPEND_STRING = "Le président suspend la séance et fixe la date du ";
     public static String OFFER_FAIT_LE_STRING = "Fait à Zagora, le :";
     public static String OFFER_COMMISSION_LE_STRING = "Emargement des membres de la commission :";
+    public static String RECEPTION_TEXT = "src/main/resources/static/text/reception.txt";
+    public static String RECEPTION_STRING = ") et vérifie les pièces et la réponse reçue.";
+    public static String WINNER_STRING = "Ayant présenté l’offre la plus avantageuse, pour un montant de";
+    public static String WINNER_TEXT = "src/main/resources/static/text/winner.txt";
 
     public static String DOTE_SYMBOL = "⚫";
     public static String DH_TTC_SYMBOL = "DHS TTC";

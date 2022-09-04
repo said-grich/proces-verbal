@@ -39,4 +39,6 @@ public class SeanceDto {
     private  String dateOfReception;
     private  String hourOfReception;
 
+
+
 }
