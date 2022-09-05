@@ -7,12 +7,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 import java.util.Scanner;
 
@@ -89,7 +87,7 @@ public class Functions {
     }
     public static String readTextFile(String textPath) throws FileNotFoundException {
         try {
-            File myObj = new File(textPath);
+            InputStream myObj =  new ClassPathResource(textPath).getInputStream();
             String data = "";
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
@@ -102,6 +100,8 @@ public class Functions {
             System.out.println("An error occurred.");
             e.printStackTrace();
             throw new FileNotFoundException("Error with file " + textPath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     public static XWPFDocument addNewLine(XWPFDocument doc) {

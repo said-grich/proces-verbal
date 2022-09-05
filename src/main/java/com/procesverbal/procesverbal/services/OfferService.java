@@ -23,7 +23,7 @@ public class OfferService {
     XWPFDocument setOffersPart1(XWPFDocument doc , List<OfferDto> offerDtoList, String montant) throws FileNotFoundException {
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
-        run1.setText(readTextFile(capitalize(OFFER_TEXT_PLIS)));
+        run1.setText(readTextFile(OFFER_TEXT_PLIS));
         run1.setFontFamily(TW_CEN_MT_FONT);
         run1.addBreak();
         doc=setOfferLocal(doc,offerDtoList);

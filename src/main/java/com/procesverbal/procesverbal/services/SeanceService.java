@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -16,6 +17,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import static com.procesverbal.procesverbal.AppString.*;
 import static com.procesverbal.procesverbal.AppString.TIMES_NEW_RAMAN_FONT;
@@ -83,9 +88,10 @@ public class SeanceService {
     public XWPFDocument creatHeaderOfDocument(XWPFDocument doc, String objet, String seanceNumber, int seanceTitle) {
         try {
             //set logo image
-            doc = addImagesToWordDocument(doc, AppString.LOGO);
+
+            doc = addImagesToWordDocument(doc, AppString.LOGO,71,256);
             //set under line image
-            doc = addImagesToWordDocument(doc, AppString.UNDER_LINE);
+            doc = addImagesToWordDocument(doc, AppString.UNDER_LINE,8,384);
             //set Aoo number
             XWPFParagraph seanceNumberParagraph = doc.createParagraph();
             seanceNumberParagraph.setAlignment(ParagraphAlignment.CENTER);
@@ -117,18 +123,18 @@ public class SeanceService {
 
     }
 
-    public XWPFDocument addImagesToWordDocument(XWPFDocument doc, String imagePath) throws IOException {
+    public XWPFDocument addImagesToWordDocument(XWPFDocument doc, String imagePath,int with,int height) throws IOException {
         try {
             XWPFParagraph p = doc.createParagraph();
             p.setAlignment(ParagraphAlignment.CENTER);
             XWPFRun r = p.createRun();
-            File imageFile = new File(imagePath);
-            BufferedImage bimg1 = ImageIO.read(imageFile);
-            int width1 = bimg1.getWidth();
-            int height1 = bimg1.getHeight();
-            String imgFile1 = imageFile.getName();
-            int imgFormat1 = getImageFormat(imgFile1);
-            r.addPicture(new FileInputStream(imageFile), imgFormat1, imgFile1, Units.toEMU(width1), Units.toEMU(height1));
+
+            InputStream imageFile = new ClassPathResource(imagePath).getInputStream();
+            Path temp = Files.createTempFile("resource-", ".ext");
+            Files.copy(imageFile, temp, StandardCopyOption.REPLACE_EXISTING);
+            FileInputStream input = new FileInputStream(temp.toFile());
+            String imgFile1 = imagePath;
+            r.addPicture(input, XWPFDocument.PICTURE_TYPE_PNG, imgFile1, Units.toEMU(height), Units.toEMU(with));
             return doc;
         } catch (IOException e) {
             logger.error(e.getMessage());

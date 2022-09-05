@@ -141,11 +141,11 @@ public class OfferFinancierService {
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
-        run1.setText(readTextFile(capitalize(OFFER_TEXT_MOTIF_AFTER_1)));
+        run1.setText(readTextFile(OFFER_TEXT_MOTIF_AFTER_1));
         XWPFParagraph paragraph2 = doc.createParagraph();
         XWPFRun run2 = paragraph2.createRun();
         run2.setFontFamily(TW_CEN_MT_FONT);
-        run2.setText(readTextFile(capitalize(OFFER_TEXT_MOTIF_AFTER_2)));
+        run2.setText(readTextFile(OFFER_TEXT_MOTIF_AFTER_2));
         if (!offerDtoList.isEmpty()) {
             doc = createTowCaseTable(doc, OFFER_MOTIF_TAB_HEADER, offerDtoList);
 
@@ -244,7 +244,7 @@ public class OfferFinancierService {
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
-        run1.setText(readTextFile(capitalize(OFFER_RECTIFIES_TEXT)));
+        run1.setText(readTextFile(OFFER_RECTIFIES_TEXT));
 
         doc = createThreeCaseRecTable(doc, OFFER_RECTIFIES_TAB_HEADER, offerDtoList, montant);
         List<OfferDto> sortedList = offerDtoList.stream()
@@ -314,7 +314,7 @@ public class OfferFinancierService {
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
-        run1.setText(readTextFile(capitalize(OFFER_CLASSEMENT_TEXT)));
+        run1.setText(readTextFile(OFFER_CLASSEMENT_TEXT));
 
         XWPFParagraph paragraph2 = doc.createParagraph();
         XWPFRun run2 = paragraph2.createRun();
