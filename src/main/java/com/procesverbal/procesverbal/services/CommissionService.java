@@ -78,6 +78,7 @@ public class CommissionService {
     }
 
     XWPFDocument createTowCaseTable(XWPFDocument doc, List<String> header, List<CommissionMemberDto> commissionMemberDtoList) {
+
         int rows = commissionMemberDtoList.size() + 1;
         int cols = header.size();
         XWPFTable table = initTab(doc, rows, cols);

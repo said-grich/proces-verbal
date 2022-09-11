@@ -1,5 +1,6 @@
 package com.procesverbal.procesverbal.services;
 
+import com.procesverbal.procesverbal.AppString;
 import com.procesverbal.procesverbal.dto.CommissionMemberDto;
 import com.procesverbal.procesverbal.dto.OfferDto;
 import com.procesverbal.procesverbal.dto.SeanceDto;
@@ -45,7 +46,7 @@ public class OfferFinancierService {
         doc = createThreeCaseTable(doc, OFFER_FINANCIER_TAB_HEADER, offerDtoList);
         doc = setMotifTab(doc, offerDtoList);
         doc = setRectifierPart(doc, offerDtoList, montant,seanceDto);
-        doc=   setCommissionEmg( doc,  seanceDto.getCommissionMemberDtoListFinal(),seanceDto.getDateFaitLe());
+        doc=   setCommissionEmg( doc,  seanceDto.getCommissionMemberFinal(),seanceDto.getDateFaitLe());
 
         return doc;
     }
@@ -240,16 +241,19 @@ public class OfferFinancierService {
     }
 
     XWPFDocument setRectifierPart(XWPFDocument doc, List<OfferDto> offerDtoList, Long montant,SeanceDto seanceDto) throws FileNotFoundException {
-        offerDtoList.stream().filter(offerDto -> !offerDto.getIsRejectedBeforeMaj() && !offerDto.getIsRejectedBeforeMaj()).collect(Collectors.toList());
+        offerDtoList= offerDtoList.stream().filter(offerDto -> offerDto.getIsRejectedBeforeMaj()==false && offerDto.getIsRejectedAfterMaj()==false).collect(Collectors.toList());
         XWPFParagraph paragraph1 = doc.createParagraph();
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
         run1.setText(readTextFile(OFFER_RECTIFIES_TEXT));
 
         doc = createThreeCaseRecTable(doc, OFFER_RECTIFIES_TAB_HEADER, offerDtoList, montant);
+
         List<OfferDto> sortedList = offerDtoList.stream()
                 .sorted(Comparator.comparingDouble(OfferDto::getMontantAfterMaj))
                 .collect(Collectors.toList());
+
+
         doc = setClassementPart(doc,sortedList,seanceDto);
 
         return doc;
@@ -301,7 +305,9 @@ public class OfferFinancierService {
                     nameRun.setBold(true);
                     nameRun.setFontFamily(TIMES_NEW_RAMAN_FONT);
                     nameRun.setFontSize(12);
-                    offerDtoList.get(i - 1).setMontantAfterMaj(montant + (montant * (offerDtoList.get(i - 1).getMajoration() / 100)));
+                    float tmp =montant + (montant * (offerDtoList.get(i - 1).getMajoration() / 100));
+
+                    offerDtoList.get(i - 1).setMontantAfterMaj(tmp);
                     nameRun.setText( offerDtoList.get(i - 1).getMontantAfterMaj() + "");
                     cell.setWidth("25%");
                 }
@@ -315,15 +321,13 @@ public class OfferFinancierService {
         XWPFRun run1 = paragraph1.createRun();
         run1.setFontFamily(TW_CEN_MT_FONT);
         run1.setText(readTextFile(OFFER_CLASSEMENT_TEXT));
-
         XWPFParagraph paragraph2 = doc.createParagraph();
         XWPFRun run2 = paragraph2.createRun();
         run2.setFontFamily(TW_CEN_MT_FONT);
         run2.setText((capitalize(OFFER_CLASSEMENT_STRING)));
-
         doc = generateList(doc, offerDtoList);
-        seanceDto.setOfferWinner(offerDtoList.get(0));
-        doc =setWinner( doc , seanceDto.getOfferWinner(),seanceDto);
+        AppString.offerWinner=offerDtoList.get(0);
+        doc =setWinner( doc , offerDtoList.get(0),seanceDto);
 
         return doc;
     }

@@ -11,8 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 public class DocumentDto {
     private String title;
-    private String aooNumber;
-
+    private String documentNumber;
+    private String objet;
     private  Long montant;
-    private  List<SeanceDto> seanceDtoList;
+    private OfferDto offerWinner;
+    private  List<SeanceDto> seances;
 }

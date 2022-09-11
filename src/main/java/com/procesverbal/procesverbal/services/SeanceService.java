@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,16 +39,16 @@ public class SeanceService {
     ReceptionService receptionService;
     Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
-    public XWPFDocument creatSeance(XWPFDocument document, String aooNumber,Long montant ,SeanceDto seanceDto) throws IOException {
+    public XWPFDocument creatSeance(XWPFDocument document, String aooNumber, Long montant , SeanceDto seanceDto , String objet, OfferDto offerWinner) throws IOException {
         try {
 
 
-            document = creatHeaderOfDocument(document, seanceDto.getObjet(),aooNumber, seanceDto.getSeanceTitle());
+            document = creatHeaderOfDocument(document, objet,aooNumber, seanceDto.getSeanceTitle());
 
 
             //set Commission Part:
             if (seanceDto.getIsHasCommission() == 1) {
-                document = commissionService.setCommissionPart(document, seanceDto.getCommissionMemberDtoList(), seanceDto.getDateOfCommission(), aooNumber, seanceDto.getObjet(), seanceDto.getDecisionNumber(), seanceDto.getDecisionDate());
+                document = commissionService.setCommissionPart(document, seanceDto.getCommissionMember(), seanceDto.getDateOfCommission(), aooNumber,objet, seanceDto.getDecisionNumber(), seanceDto.getDecisionDate());
 
             }
             //cancels effect of page break
@@ -68,7 +65,8 @@ public class SeanceService {
 
             }
             if (seanceDto.getIsHasReception()==1){
-                document= receptionService.setReceptionPart(document,seanceDto);
+
+                document= receptionService.setReceptionPart(document,seanceDto,offerWinner);
             }
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();

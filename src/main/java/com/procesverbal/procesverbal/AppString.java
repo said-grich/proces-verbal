@@ -2,6 +2,7 @@ package com.procesverbal.procesverbal;
 
 import com.procesverbal.procesverbal.configuration.StaticFilesConfig;
 import com.procesverbal.procesverbal.dto.CommissionMemberDto;
+import com.procesverbal.procesverbal.dto.OfferDto;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AppString {
+    public static OfferDto offerWinner;
     public static String LOGO="static/images/logo.png";
 
 

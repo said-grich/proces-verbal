@@ -38,7 +38,7 @@ public class JournalService {
             XWPFRun run1 = paragraph1.createRun();
             run1.setFontFamily(TW_CEN_MT_FONT);
             run1.setBold(true);
-            run1.setText(DASH_SYMBOL+" "+journalDto.getJournalName().toUpperCase() +" :" + journalDto.getJournalNumber() + " du " + journalDto.getJournalDate() + " page: " + journalDto.getJournalPage());
+            run1.setText(DASH_SYMBOL+" "+journalDto.getJournalName().toUpperCase() +" : N°" + journalDto.getJournalNumber() + " du " + journalDto.getJournalDate() + " page: " + journalDto.getJournalPage());
         }
         return doc;
     }
@@ -46,8 +46,9 @@ public class JournalService {
         XWPFParagraph paragraph3 = doc.createParagraph();
         paragraph3.setIndentationFirstLine(PARAGRAPH_OFFSET);
         XWPFRun run3 = paragraph3.createRun();
+        run3.setFontFamily(TW_CEN_MT_FONT);
         run3.setBold(true);
-        run3.setText(JOURNAUX_TEXT_PORTAIL + " " + JOURNAUX_TEXT_PORTAIL_URL + " en date du " + dateOfPortail + " a " + hourOfPortail);
+        run3.setText(capitalize(JOURNAUX_TEXT_PORTAIL) + " " + JOURNAUX_TEXT_PORTAIL_URL + " en date du " + dateOfPortail + " a " + hourOfPortail);
         run3.addBreak();
         return doc;
     }

@@ -8,10 +8,18 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static com.procesverbal.procesverbal.AppString.BORDER_SIZE;
@@ -111,18 +119,35 @@ public class Functions {
         return doc;
 
     }
-    public static void exportDocument(XWPFDocument doc, String title) throws IOException {
+    public static String exportDocument(XWPFDocument doc, String title) throws IOException {
         try {
-            FileOutputStream out = new FileOutputStream(title + ".docx");
+          String path=  makeDirAndSaveFile(title);
+          String pathFile= path+"/"+title + ".docx";
+          File  file =new File(pathFile);
+            FileOutputStream out = new FileOutputStream(file);
             doc.write(out);
             out.close();
-            doc.close();
+
+            return pathFile;
+
+
+
         } catch (IOException e) {
             logger.error(e.getMessage());
 
             throw new IOException("error with document " + title);
         }
 
+    }
+
+    public static  String makeDirAndSaveFile(String title){
+        String path="C:/proces-verbal-document/"+title+"/";
+        File theDir = new File(path);
+        if (!theDir.exists()){
+            theDir.mkdirs();
+        }
+
+        return path;
     }
     public static void setTableBorderColor(XWPFTable table, String color) {
 
@@ -140,7 +165,31 @@ public class Functions {
         table.getCTTbl().getTblPr().getTblBorders().getInsideH().setSz(BigInteger.valueOf(BORDER_SIZE));
         table.getCTTbl().getTblPr().getTblBorders().getInsideV().setSz(BigInteger.valueOf(BORDER_SIZE));
     }
+    public Resource loadFileAsResource(String path) throws Exception {
+        try {
+            File file =new File(path);
+            Resource resource = new UrlResource(file.toURI());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                throw new Exception("File not found " + path);
+            }
+        } catch (Exception ex) {
+            throw new Exception("File not found " + path, ex);
+        }
+    }
 
+
+    public static List<String> listFilesForFolder(final File folder) {
+
+        List<String> filesList=new ArrayList<String>();
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                filesList.add(fileEntry.getName());
+            }
+        }
+        return filesList;
+    }
 
 
 }

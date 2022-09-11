@@ -11,14 +11,13 @@ import java.util.List;
 @NoArgsConstructor
 public class SeanceDto {
     private int seanceTitle;
-    private String objet;
     private String  dateOfCommission;
     private String  decisionNumber;
     private String  decisionDate;
     private  String dateOfPortail;
     private  String hourOfPortail;
-    private List<CommissionMemberDto> commissionMemberDtoList;
-    private List<CommissionMemberDto> commissionMemberDtoListFinal;
+    private List<CommissionMemberDto> commissionMember;
+    private List<CommissionMemberDto> commissionMemberFinal;
     private List<JournalDto> journalDtoList;
     private List<OfferDto> offerDtoList;
     private OfferDto offerWinner;

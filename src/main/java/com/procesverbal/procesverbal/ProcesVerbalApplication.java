@@ -12,7 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+@SpringBootApplication(scanBasePackages={"com.procesverbal.procesverbal"})
 public class ProcesVerbalApplication {
 
    
